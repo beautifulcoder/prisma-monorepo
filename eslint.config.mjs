@@ -13,4 +13,11 @@ const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
 ];
 
+eslintConfig.push({
+  files: ["**/*.tsx"],
+  rules: {
+    "@next/next/no-html-link-for-pages": ["error", __dirname + "/app/"]
+  },
+});
+
 export default eslintConfig;
