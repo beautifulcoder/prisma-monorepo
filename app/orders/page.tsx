@@ -3,17 +3,30 @@ import Link from "next/link";
 
 export default async function OrdersPage() {
   const orders = await prisma.order.findMany({
+    select: {
+      id: true,
+      items: {
+        select: {
+          id: true,
+          quantity: true,
+          pizza: {
+            select: {
+              name: true,
+              price: true
+            }
+          }
+        }
+      }
+    },
     where: {
       status: {
         not: "CANCELLED"
       }
     },
-    include: {
-      items: {
-        include: {
-          pizza: true
-        }
-      }
+    cacheStrategy: {
+      ttl: 300,
+      swr: 60,
+      tags: ["orders"]
     }
   });
 

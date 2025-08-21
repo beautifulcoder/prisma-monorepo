@@ -27,6 +27,18 @@ export default async function NewOrderPage() {
       },
     });
 
+    try {
+      await prisma.$accelerate.invalidate({
+        tags: ["orders"]
+      });
+    } catch (error) {
+      if (error.code === "P6003") {
+        console.error("The cache invalidation rate limit has been reached in your account. Please try again later.");
+      } else {
+        throw error;
+      }
+    }
+
     revalidatePath("/orders");
     redirect("/orders");
   };

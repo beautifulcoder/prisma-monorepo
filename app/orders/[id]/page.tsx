@@ -9,14 +9,31 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
   const orderId = parseInt(id, 10);
 
   const order = await prisma.order.findUnique({
-    where: { id: orderId },
-    include: {
-      user: true,
+    select: {
+      id: true,
+      status: true,
+      updatedAt: true,
+      user: {
+        select: {
+          name: true
+        }
+      },
       items: {
-        include: {
-          pizza: true
+        select: {
+          id: true,
+          quantity: true,
+          pizza: {
+            select: {
+              name: true,
+              price: true
+            }
+          }
         }
       }
+    },
+    where: { id: orderId },
+    cacheStrategy: {
+      ttl: 120
     }
   });
 

@@ -33,6 +33,8 @@ model Order {
   userId    Int
 
   items      OrderItem[]
+
+  @@index([status])
 }
 
 model OrderItem {
